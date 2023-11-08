@@ -16,18 +16,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +66,14 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavDrawer(){
+    
+    val drawerItem = listOf(
+        DrawerItems(Icons.Default.Face, "Profile", 0, false),
+        DrawerItems(Icons.Filled.Email, "Inbox", 32, true),
+        DrawerItems(Icons.Filled.Favorite, "Favorite", 32, true),
+        DrawerItems(Icons.Filled.Settings, "Setting", 0, false),
+    )
+    va
     ModalNavigationDrawer(drawerContent = {
         ModalDrawerSheet {
 
@@ -91,9 +110,35 @@ fun NavDrawer(){
                 }
 
             }
+            drawerItem.forEach{
+                NavigationDrawerItem(label = { Text(text = it.text) }, 
+                    selected = it == selectedItem, 
+                    onClick = { /*TODO*/ },
+                    icon = {
+                        Icon(imageVector = it.icon, contentDescription = it.text)
+                    },
+                    badge = {
+                        if (it.hasBadge){
+                            BadgedBox(badge = {
+                                Text(
+                                    text = it.badgeCount.toString(),
+                                    fontSize = 17.sp
+                                )
+                            }) {
+                                
+                            }
+                        }
+                    })
+            }
         }
     }) {
 
     }
 
 }
+data class DrawerItems(
+    val icon : ImageVector,
+    val text: String,
+    val badgeCount: Int,
+    val hasBadge : Boolean
+)
